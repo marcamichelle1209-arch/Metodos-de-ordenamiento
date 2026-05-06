@@ -2,14 +2,7 @@ import java.util.Arrays;
 
 public class Ordenamiento {
 
-    // ══════════════════════════════════════════════════════
-    //  INSERCIÓN
-    //  Recorre el arreglo de i=1 hasta n-1.
-    //  En cada iteración toma el elemento en posición b=i
-    //  y lo compara con el elemento a=b-1 (izquierda).
-    //  Si están en el orden incorrecto, intercambia y
-    //  continúa retrocediendo hacia la izquierda.
-    // ══════════════════════════════════════════════════════
+    
     public int[] insercion(int[] original, boolean ascendente) {
         int[] arr = Arrays.copyOf(original, original.length);
 
@@ -20,39 +13,26 @@ public class Ordenamiento {
         System.out.println("==== METODO INSERCION ====");
         System.out.print("Arreglo original: ");
         imprimirArreglo(arr);
-        System.out.println();
 
         for (int i = 1; i < arr.length; i++) {
             iteraciones++;
-            int b = i;
-            int a = b - 1;
-
-            // Cabecera de iteración
             System.out.printf("I%-4d", iteraciones);
             imprimirArregloInline(arr);
 
-            boolean primero = true;
-
-            while (a >= 0) {
+            for (int j = i; j > 0; j--) {
                 comparaciones++;
-                boolean intercambiar = ascendente ? arr[a] > arr[b] : arr[a] < arr[b];
+                boolean intercambiar = ascendente ? arr[j-1] > arr[j] : arr[j-1] < arr[j];
 
-                if (primero) {
-                    System.out.printf("a=%-3d b=%-3d [a]=%-6d [b]=%-6d cambio=%s%n",
-                            a, b, arr[a], arr[b], intercambiar ? "si" : "no");
-                    primero = false;
-                } else {
-                    System.out.printf("%35s a=%-3d b=%-3d [a]=%-6d [b]=%-6d cambio=%s%n",
-                            "", a, b, arr[a], arr[b], intercambiar ? "si" : "no");
-                }
+                System.out.printf("a=%-3d b=%-3d [a]=%-6d [b]=%-6d cambio=%s%n",
+                        j-1, j, arr[j-1], arr[j], intercambiar ? "si" : "no");
 
                 if (intercambiar) {
-                    int tmp = arr[a]; arr[a] = arr[b]; arr[b] = tmp;
+                    int tmp = arr[j-1];
+                    arr[j-1] = arr[j];
+                    arr[j] = tmp;
                     cambios++;
                     System.out.print("     ");
                     imprimirArreglo(arr);
-                    b = a;
-                    a--;
                 } else {
                     break;
                 }
@@ -67,13 +47,7 @@ public class Ordenamiento {
         return new int[]{ comparaciones, cambios, iteraciones };
     }
 
-    // ══════════════════════════════════════════════════════
-    //  SHELL SORT
-    //  El gap comienza en n/2 y se divide entre 2 en cada
-    //  pasada. Para cada gap, compara pares separados por
-    //  'gap' posiciones, intercambiando si es necesario y
-    //  retrocediendo de gap en gap.
-    // ══════════════════════════════════════════════════════
+    
     public int[] shell(int[] original, boolean ascendente) {
         int[] arr = Arrays.copyOf(original, original.length);
         int n = arr.length;
@@ -85,39 +59,27 @@ public class Ordenamiento {
         System.out.println("==== METODO SHELL ====");
         System.out.print("Arreglo original: ");
         imprimirArreglo(arr);
-        System.out.println();
 
         for (int gap = n / 2; gap > 0; gap /= 2) {
             for (int i = gap; i < n; i++) {
                 iteraciones++;
-                int b = i;
-                int a = b - gap;
-
                 System.out.printf("I%-4d", iteraciones);
                 imprimirArregloInline(arr);
 
-                boolean primero = true;
-
-                while (a >= 0) {
+                for (int j = i; j >= gap; j -= gap) {
                     comparaciones++;
-                    boolean intercambiar = ascendente ? arr[a] > arr[b] : arr[a] < arr[b];
+                    boolean intercambiar = ascendente ? arr[j-gap] > arr[j] : arr[j-gap] < arr[j];
 
-                    if (primero) {
-                        System.out.printf("gap=%-3d a=%-3d b=%-3d [a]=%-6d [b]=%-6d cambio=%s%n",
-                                gap, a, b, arr[a], arr[b], intercambiar ? "si" : "no");
-                        primero = false;
-                    } else {
-                        System.out.printf("%35s gap=%-3d a=%-3d b=%-3d [a]=%-6d [b]=%-6d cambio=%s%n",
-                                "", gap, a, b, arr[a], arr[b], intercambiar ? "si" : "no");
-                    }
+                    System.out.printf("gap=%-3d a=%-3d b=%-3d [a]=%-6d [b]=%-6d cambio=%s%n",
+                            gap, j-gap, j, arr[j-gap], arr[j], intercambiar ? "si" : "no");
 
                     if (intercambiar) {
-                        int tmp = arr[a]; arr[a] = arr[b]; arr[b] = tmp;
+                        int tmp = arr[j-gap];
+                        arr[j-gap] = arr[j];
+                        arr[j] = tmp;
                         cambios++;
                         System.out.print("     ");
                         imprimirArreglo(arr);
-                        b = a;
-                        a -= gap;
                     } else {
                         break;
                     }
@@ -132,6 +94,7 @@ public class Ordenamiento {
 
         return new int[]{ comparaciones, cambios, iteraciones };
     }
+
 
     private void imprimirArreglo(int[] arr) {
         for (int v : arr) System.out.printf("%-5d", v);
